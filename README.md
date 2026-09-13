@@ -49,7 +49,7 @@
 
 1. 项目设置 → 渲染 → 渲染器：使用 **Forward+**。
 2. 场景中的 `WorldEnvironment` → `Environment` 资源 → **Pathtracing** 分组：勾选 `pathtracing_enabled`。
-3. 如需 DLSS 超分：项目设置 `rendering/scaling_3d/mode` 选 **DLSS**，`rendering/scaling_3d/scale` 设小于 1.0；开路径追踪时 DLSS 同时充当降噪器（光线重建）。
+3. **必须**把项目设置 `rendering/scaling_3d/mode` 设为 **DLSS**：DLSS 光线重建降噪是在 DLSS 缩放通道里执行的，缩放模式保持默认的 Bilinear 时，`pathtracing_denoiser` 选什么都不会跑，画面就是 1 spp 的原始噪点。`rendering/scaling_3d/scale` 设 1.0 为原生分辨率纯降噪（DLAA），0.5 到 0.67 则同时超分。
 
 ### Environment（`Environment` 资源，Pathtracing 分组）
 
@@ -161,7 +161,7 @@ This is a community-maintained repository, not affiliated with NVIDIA or the God
 
 **Download:** grab the Windows x64 editor zip from [Releases](https://github.com/bailaiOWO/rtx-godot/releases). It ships the editor executables, the Streamline runtime DLLs (which must stay next to the executable) and `D3D12Core.dll`. Path tracing needs a ray-tracing capable GPU (tested on NVIDIA RTX); DLSS Super Resolution and Ray Reconstruction need an RTX 20 series or newer, Frame Generation an RTX 40 series or newer. Export templates are not shipped yet; build them with `target=template_release` / `template_debug` and keep the Streamline DLLs beside the exported executable.
 
-**Usage:** use the Forward+ renderer, enable `pathtracing_enabled` on the `Environment` resource, and optionally set `rendering/scaling_3d/mode` to DLSS with a scale below 1.0. Path-tracing options live under `rendering/pathtracing/*`, Streamline options under `rendering/streamline/*`; `Viewport.frame_generation` toggles DLSS Frame Generation. The `Streamline` singleton exposes `get_capability()` and `set_parameter()`. See the Chinese section above for a description of every setting, or the built-in class reference.
+**Usage:** use the Forward+ renderer, enable `pathtracing_enabled` on the `Environment` resource, and set `rendering/scaling_3d/mode` to DLSS (required: DLSS Ray Reconstruction denoising runs inside the DLSS scaling pass, so with the default Bilinear mode the denoiser setting has no effect). Scale 1.0 = native-resolution denoising (DLAA), 0.5 to 0.67 = upscaling as well. Path-tracing options live under `rendering/pathtracing/*`, Streamline options under `rendering/streamline/*`; `Viewport.frame_generation` toggles DLSS Frame Generation. The `Streamline` singleton exposes `get_capability()` and `set_parameter()`. See the Chinese section above for a description of every setting, or the built-in class reference.
 
 **Building:** Visual Studio 2022, Python 3.8+, SCons 4.x. Install the D3D12 and AccessKit dependencies into `bin/build_deps` with `env -u LOCALAPPDATA python misc/scripts/install_d3d12_sdk_windows.py` and `install_accesskit.py`, then build with `GODOT_VERSION_STATUS=dev5 scons platform=windows target=editor arch=x86_64 d3d12=yes angle=no use_streamline=yes` plus absolute `mesa_libs`, `agility_sdk_path`, `pix_path` and `accesskit_sdk_path` pointing into `bin/build_deps`. Copy the Streamline 2.10.0 runtime DLLs next to the executable before running; header and DLL versions must match.
 
