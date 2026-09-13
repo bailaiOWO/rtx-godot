@@ -13020,3 +13020,66 @@ msgstr "VRS 强度"
 
 msgid "VRS Render Region"
 msgstr "VRS 渲染区域"
+
+msgid "Pathtracing"
+msgstr "路径追踪"
+
+msgid "Async Shader Compilation"
+msgstr "异步着色器编译"
+
+msgid "Deformed Mesh Cache TTL Frames"
+msgstr "形变网格缓存保留帧数"
+
+msgid "Multimesh BLAS Cache TTL Frames"
+msgstr "MultiMesh BLAS 缓存保留帧数"
+
+msgid "Multimesh Cache CPU Transforms"
+msgstr "MultiMesh 缓存 CPU 端变换"
+
+msgid "Multimesh Merged BLAS Max Triangles"
+msgstr "MultiMesh 合并 BLAS 最大三角形数"
+
+msgid "Use Shader Execution Reordering"
+msgstr "使用着色器执行重排序"
+
+msgid "Use Simple Shadows"
+msgstr "使用简易阴影"
+
+msgid "DLSS Preset"
+msgstr "DLSS 预设"
+
+msgid "DLSS Ray Reconstruction Preset"
+msgstr "DLSS 光线重建预设"
+
+msgid "Reflex Frame Limit (µs)"
+msgstr "Reflex 帧率限制 (µs)"
+
+msgid "Reflex Mode"
+msgstr "Reflex 模式"
+
+msgid "Streamline ImGui"
+msgstr "Streamline ImGui 调试界面"
+
+msgid "Streamline Log"
+msgstr "Streamline 日志"
+
+msgid "Debug Mode"
+msgstr "调试模式"
+
+msgid "Samples per Pixel"
+msgstr "每像素采样数"
+
+msgid "Max Bounces"
+msgstr "最大反弹次数"
+
+msgid "Frame Generation"
+msgstr "帧生成"
+
+msgid "Bounds"
+msgstr "包围盒"
+
+msgid "Custom Enclosing AABB"
+msgstr "自定义外包 AABB"
+
+msgid "Expose AABB Bounds"
+msgstr "向着色器暴露 AABB"

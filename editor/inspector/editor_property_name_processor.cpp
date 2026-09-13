@@ -162,6 +162,7 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["bbcode"] = "BBCode";
 	capitalize_string_remaps["bg"] = "BG";
 	capitalize_string_remaps["bidi"] = "BiDi";
+	capitalize_string_remaps["blas"] = "BLAS";
 	capitalize_string_remaps["bp"] = "BP";
 	capitalize_string_remaps["bpc"] = "BPC";
 	capitalize_string_remaps["bpm"] = "BPM";
@@ -175,6 +176,7 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["csg"] = "CSG";
 	capitalize_string_remaps["d3d12"] = "D3D12";
 	capitalize_string_remaps["db"] = "dB";
+	capitalize_string_remaps["dlss"] = "DLSS";
 	capitalize_string_remaps["dof"] = "DoF";
 	capitalize_string_remaps["dpi"] = "DPI";
 	capitalize_string_remaps["dtls"] = "DTLS";
@@ -219,6 +221,7 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["image@2x"] = "Image @2x";
 	capitalize_string_remaps["image@3x"] = "Image @3x";
 	capitalize_string_remaps["ime"] = "IME";
+	capitalize_string_remaps["imgui"] = "ImGui";
 	capitalize_string_remaps["iod"] = "IOD";
 	capitalize_string_remaps["ios"] = "iOS";
 	capitalize_string_remaps["ip"] = "IP";
@@ -295,6 +298,7 @@ EditorPropertyNameProcessor::EditorPropertyNameProcessor() {
 	capitalize_string_remaps["tcp"] = "TCP";
 	capitalize_string_remaps["textfile"] = "TextFile";
 	capitalize_string_remaps["tls"] = "TLS";
+	capitalize_string_remaps["ttl"] = "TTL";
 	capitalize_string_remaps["tv"] = "TV";
 	capitalize_string_remaps["tvos"] = "tvOS";
 	capitalize_string_remaps["uastc"] = "UASTC";

@@ -203801,3 +203801,308 @@ msgid ""
 msgstr ""
 "将加载的 zip 存档中文件的全部内容加载到内存中并返回它。\n"
 "必须在 [method open] 之后调用。"
+
+msgid "If [code]true[/code], path tracing ray hit shaders are compiled asynchronously in the background. This avoids frame stalls when new shader variants are first encountered during rendering. While a shader is compiling, a fallback shader may be used, which can cause temporary visual artifacts. Disable this if you require fully deterministic rendering from the first frame at the cost of potential stalls on shader warm-up."
+msgstr "如果为 [code]true[/code]，路径追踪的光线命中着色器会在后台异步编译。这样可以避免渲染过程中首次遇到新的着色器变体时出现整帧卡顿。着色器编译期间可能会使用回退着色器，从而造成暂时的视觉瑕疵。如果你要求从第一帧开始就完全确定的渲染结果，可以禁用该选项，代价是着色器预热时可能发生卡顿。"
+
+msgid ""
+"Number of frames a skinned or vertex-displaced deformed-mesh BLAS is kept alive in the path tracer cache after its last visible frame. Once this threshold is exceeded the BLAS and its associated buffers are freed. Increase this value if deformed meshes flicker back into view after brief occlusion; decrease it to reclaim GPU memory sooner.\n"
+"[b]Note:[/b] Requires a restart to take effect."
+msgstr ""
+"蒙皮或顶点位移的形变网格的 BLAS 在最后一次可见帧之后，会在路径追踪器缓存中继续保留的帧数。超过该阈值后，BLAS 及其关联缓冲会被释放。如果形变网格在短暂被遮挡后重新出现时发生闪烁，请增大该值；若希望更早回收 GPU 内存，请减小该值。\n"
+"[b]注意：[/b]需要重启才能生效。"
+
+msgid ""
+"Number of frames a merged MultiMesh BLAS is kept alive in the path tracer cache after its last visible frame. At 60 fps, the default of 3600 corresponds to approximately one minute. Once this threshold is exceeded the BLAS and all merged vertex, attribute, and index buffers are freed. Decrease this value to reclaim GPU memory when MultiMeshes disappear from the scene.\n"
+"[b]Note:[/b] Requires a restart to take effect."
+msgstr ""
+"合并后的 MultiMesh BLAS 在最后一次可见帧之后，会在路径追踪器缓存中继续保留的帧数。在 60 fps 下，默认值 3600 约等于一分钟。超过该阈值后，BLAS 以及所有合并的顶点、属性和索引缓冲都会被释放。当 MultiMesh 从场景中消失后想要回收 GPU 内存，可以减小该值。\n"
+"[b]注意：[/b]需要重启才能生效。"
+
+msgid ""
+"When enabled, setting [member MultiMesh.buffer] keeps a CPU-side mirror of the instance transform data in sync with the GPU buffer. This allows the path tracer to read per-instance transforms without performing a GPU-to-CPU readback on first access, eliminating the one-time stall that occurs otherwise.\n"
+"[b]Warning:[/b] Enabling this setting increases CPU memory usage. Every [MultiMesh] that assigns [member MultiMesh.buffer] will maintain a full duplicate of its transform data in RAM.\n"
+"Enable this only when [MultiMesh] nodes with frequently updated transforms are present in path-traced scenes and the GPU readback stall is measurable.\n"
+"[b]Note:[/b] Requires a restart to take effect."
+msgstr ""
+"启用后，设置 [member MultiMesh.buffer] 时会在 CPU 端保留一份与 GPU 缓冲同步的实例变换数据镜像。这样路径追踪器在首次访问时无需执行 GPU 到 CPU 的回读即可读取每个实例的变换，从而消除原本会发生的一次性卡顿。\n"
+"[b]警告：[/b]启用该设置会增加 CPU 内存占用。每个设置了 [member MultiMesh.buffer] 的 [MultiMesh] 都会在内存中维护一份完整的变换数据副本。只有当路径追踪场景中存在变换频繁更新的 [MultiMesh] 节点、且 GPU 回读造成的卡顿可以被明显测量到时才建议启用。\n"
+"[b]注意：[/b]需要重启才能生效。"
+
+msgid ""
+"Maximum total triangle count ([code]instance_count * triangles_per_surface[/code]) for a [MultiMesh] surface to use a single merged BLAS in the path tracer. When the combined triangle count exceeds this value, the path tracer falls back to one TLAS entry per instance sharing a common BLAS instead. Lower this value to reduce peak GPU memory for large MultiMeshes; raise it to prefer the merged path (which avoids per-instance TLAS overhead).\n"
+"[b]Note:[/b] Requires a restart to take effect."
+msgstr ""
+"[MultiMesh] 表面在路径追踪器中使用单个合并 BLAS 时允许的最大总三角形数（[code]instance_count * triangles_per_surface[/code]）。当合计三角形数超过该值时，路径追踪器会改为每个实例一个 TLAS 条目、共用同一个 BLAS。减小该值可以降低大型 MultiMesh 的峰值 GPU 内存；增大该值则更倾向于使用合并路径（可避免逐实例的 TLAS 开销）。\n"
+"[b]注意：[/b]需要重启才能生效。"
+
+msgid "If [code]true[/code], enables NVIDIA Shader Execution Reordering in the path tracer. SET reorders ray tracing shader invocations at runtime to improve GPU occupancy and reduce divergence between threads executing different materials. This can significantly improve path tracing performance on NVIDIA Ada Lovelace and later GPUs. Has no effect on hardware that does not support SET."
+msgstr "如果为 [code]true[/code]，在路径追踪器中启用 NVIDIA Shader Execution Reordering（SER）。SER 会在运行时对光线追踪着色器的调用进行重新排序，以提高 GPU 占用率并减少执行不同材质的线程之间的分歧。在 NVIDIA Ada Lovelace 及更新的 GPU 上可以显著提升路径追踪性能。在不支持 SER 的硬件上没有效果。"
+
+msgid ""
+"If [code]true[/code], shadow rays use Ray Queries instead of fully traced rays. Ray Queries are significantly cheaper but rely on a quick alpha texture fetch, which can produce incorrect shadows on materials with generated/animated alpha textures. Fully traced shadow rays are more accurate but incur a higher GPU cost.\n"
+"[b]Note:[/b] Only has an effect when path tracing is enabled on the active [Environment]."
+msgstr ""
+"如果为 [code]true[/code]，阴影光线使用 Ray Query（光线查询）而不是完整追踪的光线。Ray Query 的开销要低得多，但依赖于快速的 alpha 贴图采样，对于使用生成式或动画 alpha 贴图的材质可能产生错误的阴影。完整追踪的阴影光线更精确，但 GPU 开销更高。\n"
+"[b]注意：[/b]仅在当前 [Environment] 启用了路径追踪时有效。"
+
+msgid "The default NVIDIA DLSS Super Resolution preset to use."
+msgstr "默认使用的 NVIDIA DLSS 超分辨率预设。"
+
+msgid "The default NVIDIA DLSS Ray Reconstruction preset to use."
+msgstr "默认使用的 NVIDIA DLSS 光线重建预设。"
+
+msgid "If not [code]0[/code], enables NVIDIA Reflex Frame Rate Limiter, which intelligently reduces framerate whilst keeping latency as low as possible. The expected value is in micro-seconds. Example: 60 FPS = 16667 us (1,000,000 us / 60 FPS)"
+msgstr "如果不为 [code]0[/code]，启用 NVIDIA Reflex 帧率限制器，它会在尽量保持最低延迟的同时智能地限制帧率。取值单位为微秒。例如：60 FPS = 16667 µs（1,000,000 µs / 60 FPS）"
+
+msgid "If [code]1[/code], enables NVIDIA Reflex, which reduces latency by rendering just before vertical sync. When the value is set to 2, will also enable low latency boost."
+msgstr "如果为 [code]1[/code]，启用 NVIDIA Reflex，通过在垂直同步之前恰好完成渲染来降低延迟。设置为 2 时还会额外启用低延迟增强（Low Latency Boost）。"
+
+msgid "If [code]1[/code], enables Streamline ImgUI Plugin. Useful for debugging purposes."
+msgstr "如果为 [code]1[/code]，启用 Streamline 的 ImGui 插件。用于调试。"
+
+msgid "If [code]1[/code], enables Streamline Logging. Useful for debugging purposes."
+msgstr "如果为 [code]1[/code]，启用 Streamline 日志。用于调试。"
+
+msgid ""
+"Selects a debug visualization channel to display instead of the final path-traced image. Useful for inspecting individual G-buffer inputs and intermediate shading data. Set to [constant RT_DEBUG_DISABLED] to show the normal rendered result.\n"
+"[b]Note:[/b] Only has an effect when [member pathtracing_enabled] is [code]true[/code]."
+msgstr ""
+"选择一个调试可视化通道来代替最终的路径追踪图像显示。用于检查各个 G-buffer 输入以及中间着色数据。设置为 [constant RT_DEBUG_DISABLED] 可显示正常的渲染结果。\n"
+"[b]注意：[/b]仅在 [member pathtracing_enabled] 为 [code]true[/code] 时有效。"
+
+msgid ""
+"The denoiser used to reduce noise in the path-traced image. [constant RenderingServer.PT_DENOISER_DLSS_RAY_RECONSTRUCTION] uses NVIDIA DLSS Ray Reconstruction for high-quality temporal denoising and requires an NVIDIA RTX GPU. Use [constant RenderingServer.PT_DENOISER_NONE] to disable denoising.\n"
+"[b]Note:[/b] Only has an effect when [member pathtracing_enabled] is [code]true[/code]."
+msgstr ""
+"用于降低路径追踪图像噪点的降噪器。[constant RenderingServer.PT_DENOISER_DLSS_RAY_RECONSTRUCTION] 使用 NVIDIA DLSS 光线重建进行高质量的时域降噪，需要 NVIDIA RTX GPU。使用 [constant RenderingServer.PT_DENOISER_NONE] 可禁用降噪。\n"
+"[b]注意：[/b]仅在 [member pathtracing_enabled] 为 [code]true[/code] 时有效。"
+
+msgid ""
+"If [code]true[/code], enables hardware-accelerated path tracing for this environment. Path tracing produces physically accurate global illumination, reflections, and shadows by simulating light rays bouncing through the scene. Requires a GPU with ray tracing support.\n"
+"[b]Note:[/b] Path tracing is mutually exclusive with rasterization-based rendering. When enabled, features such as SDFGI, screen-space reflections, and shadow maps are bypassed."
+msgstr ""
+"如果为 [code]true[/code]，为该环境启用硬件加速的路径追踪。路径追踪通过模拟光线在场景中的多次反弹，产生物理上准确的全局光照、反射和阴影。需要支持光线追踪的 GPU。\n"
+"[b]注意：[/b]路径追踪与基于光栅化的渲染互斥。启用后，SDFGI、屏幕空间反射、阴影贴图等功能将被绕过。"
+
+msgid ""
+"Maximum number of times a ray is allowed to bounce off surfaces before it is terminated. Higher values produce more accurate indirect lighting and inter-reflections at the cost of GPU performance. A value of [code]0[/code] produces direct illumination only.\n"
+"[b]Note:[/b] Only has an effect when [member pathtracing_enabled] is [code]true[/code]."
+msgstr ""
+"光线在被终止之前允许在表面之间反弹的最大次数。值越大，间接光照和相互反射越准确，但 GPU 性能开销也越大。值为 [code]0[/code] 时只计算直接光照。\n"
+"[b]注意：[/b]仅在 [member pathtracing_enabled] 为 [code]true[/code] 时有效。"
+
+msgid ""
+"Number of ray samples cast per pixel per frame. Higher values reduce noise but increase GPU cost proportionally. When using a temporal denoiser such as DLSS Ray Reconstruction, a low sample count (1-2) is typically sufficient since the denoiser accumulates information across frames.\n"
+"[b]Note:[/b] Only has an effect when [member pathtracing_enabled] is [code]true[/code]."
+msgstr ""
+"每帧每个像素投射的光线采样数。值越大噪点越少，但 GPU 开销会成比例增加。使用 DLSS 光线重建等时域降噪器时，较低的采样数（1 到 2）通常就已足够，因为降噪器会跨帧累积信息。\n"
+"[b]注意：[/b]仅在 [member pathtracing_enabled] 为 [code]true[/code] 时有效。"
+
+msgid "No debug visualization. Displays the final path-traced and denoised image."
+msgstr "不进行调试可视化。显示最终经过路径追踪和降噪的图像。"
+
+msgid "Displays the mirror (specular) reflection contribution only."
+msgstr "仅显示镜面（高光）反射的贡献。"
+
+msgid "Displays the raw per-triangle geometric normals, without any normal map applied."
+msgstr "显示原始的逐三角形几何法线，不应用任何法线贴图。"
+
+msgid "Displays the final shading normals after applying normal maps and tangent-space transforms."
+msgstr "显示应用法线贴图和切线空间变换之后的最终着色法线。"
+
+msgid "Displays the normal map texture sample in tangent space."
+msgstr "显示切线空间中的法线贴图采样值。"
+
+msgid "Displays the surface tangent vector at each hit point."
+msgstr "显示每个命中点处的表面切线向量。"
+
+msgid "Displays the surface bitangent vector at each hit point."
+msgstr "显示每个命中点处的表面副切线向量。"
+
+msgid "Displays the primary UV texture coordinates as a color (red = U, green = V)."
+msgstr "将主 UV 纹理坐标显示为颜色（红 = U，绿 = V）。"
+
+msgid "Displays the combined albedo (base color) of each surface."
+msgstr "显示每个表面的合成反照率（基础颜色）。"
+
+msgid "Displays the packed ORM texture (Occlusion, Roughness, Metalness in RGB channels)."
+msgstr "显示打包的 ORM 贴图（RGB 通道分别为遮蔽、粗糙度、金属度）。"
+
+msgid "Displays only the diffuse albedo contribution, excluding specular."
+msgstr "仅显示漫反射反照率的贡献，不含高光。"
+
+msgid "Displays only the specular albedo (F0) contribution."
+msgstr "仅显示高光反照率（F0）的贡献。"
+
+msgid "Displays the shading normal and roughness packed together (normal in RGB, roughness in alpha visualized as intensity)."
+msgstr "显示打包在一起的着色法线和粗糙度（RGB 为法线，Alpha 中的粗糙度以亮度显示）。"
+
+msgid "Displays the distance to the first specular ray hit, encoded as a grayscale value."
+msgstr "以灰度值显示到第一个高光光线命中点的距离。"
+
+msgid "Displays the metalness value of each surface as a grayscale image."
+msgstr "以灰度图显示每个表面的金属度。"
+
+msgid "Displays the roughness value of each surface as a grayscale image."
+msgstr "以灰度图显示每个表面的粗糙度。"
+
+msgid "Displays the shading normals transformed into view (camera) space."
+msgstr "显示变换到观察（相机）空间的着色法线。"
+
+msgid "Displays diffuse lighting on the left half and specular lighting on the right half of the screen."
+msgstr "屏幕左半部分显示漫反射光照，右半部分显示高光光照。"
+
+msgid "Displays the Fresnel F0 reflectance value for each surface."
+msgstr "显示每个表面的菲涅尔 F0 反射率。"
+
+msgid "Displays front-facing geometry in green and back-facing geometry in red. Useful for identifying incorrect face winding or double-sided materials."
+msgstr "正面朝向的几何体显示为绿色，背面朝向的显示为红色。可用于排查错误的面朝向或双面材质。"
+
+msgid "Displays the primary ray hit depth (distance from camera) as a grayscale image."
+msgstr "以灰度图显示主光线的命中深度（与相机的距离）。"
+
+msgid "Displays the emissive light contribution of each surface."
+msgstr "显示每个表面的自发光贡献。"
+
+msgid "Displays rays that were rejected by the BRDF sampling process, useful for debugging importance sampling issues."
+msgstr "显示在 BRDF 采样过程中被拒绝的光线，可用于调试重要性采样问题。"
+
+msgid "Enables Frame Generation technology on this viewport, if available. (currently DLSS 3.0 is supported - NVIDIA only)"
+msgstr "如果可用，在该视口上启用帧生成技术。（目前支持 DLSS 3.0，仅限 NVIDIA）"
+
+msgid "Use NVIDIA DLSS upscaling for the viewport's 3D buffer. The amount of scaling can be set using [member Viewport.scaling_3d_scale]. Values less than [code]1.0[/code] will result in the viewport being upscaled using DLSS Super Resolution or DLSS Ray Regeneration, depending on raytracing mode ON/OFF. Values greater than [code]1.0[/code] are not supported and bilinear downsampling will be used instead. Scaling values: 0.5 - Performance, 0.58 - Balanced, 0.66 - Quality, 1.0 - DLAA"
+msgstr "对视口的 3D 缓冲使用 NVIDIA DLSS 放大。缩放比例可以通过 [member Viewport.scaling_3d_scale] 设置。小于 [code]1.0[/code] 的值会使用 DLSS 超分辨率或 DLSS 光线重建（取决于光线追踪是否开启）对视口进行放大。不支持大于 [code]1.0[/code] 的值，此时将改用双线性降采样。缩放值：0.5 - 性能，0.58 - 平衡，0.66 - 质量，1.0 - DLAA"
+
+msgid "Number of TLAS instances submitted this frame (ray tracing only)."
+msgstr "本帧提交的 TLAS 实例数（仅光线追踪）。"
+
+msgid "Number of full BLAS builds performed this frame (ray tracing only)."
+msgstr "本帧执行的完整 BLAS 构建次数（仅光线追踪）。"
+
+msgid "Number of BLAS refits performed this frame (ray tracing only)."
+msgstr "本帧执行的 BLAS 重构（refit）次数（仅光线追踪）。"
+
+msgid "Total triangles processed by full BLAS builds this frame (ray tracing only)."
+msgstr "本帧完整 BLAS 构建所处理的三角形总数（仅光线追踪）。"
+
+msgid "Total triangles processed by BLAS refits this frame (ray tracing only)."
+msgstr "本帧 BLAS 重构所处理的三角形总数（仅光线追踪）。"
+
+msgid "Displays the diffuse albedo input buffer provided to NVIDIA DLSS Ray Reconstruction. Only has an effect when DLSS Ray Reconstruction is active."
+msgstr "显示提供给 NVIDIA DLSS 光线重建的漫反射反照率输入缓冲。仅在 DLSS 光线重建激活时有效。"
+
+msgid "Displays the specular albedo input buffer provided to NVIDIA DLSS Ray Reconstruction. Only has an effect when DLSS Ray Reconstruction is active."
+msgstr "显示提供给 NVIDIA DLSS 光线重建的高光反照率输入缓冲。仅在 DLSS 光线重建激活时有效。"
+
+msgid "Displays the packed normal and roughness input buffer provided to NVIDIA DLSS Ray Reconstruction. Only has an effect when DLSS Ray Reconstruction is active."
+msgstr "显示提供给 NVIDIA DLSS 光线重建的打包法线与粗糙度输入缓冲。仅在 DLSS 光线重建激活时有效。"
+
+msgid "Displays the specular ray hit distance input buffer provided to NVIDIA DLSS Ray Reconstruction. Only has an effect when DLSS Ray Reconstruction is active."
+msgstr "显示提供给 NVIDIA DLSS 光线重建的高光光线命中距离输入缓冲。仅在 DLSS 光线重建激活时有效。"
+
+msgid "Displays the depth buffer reconstructed by NVIDIA DLSS Ray Reconstruction after denoising. Only has an effect when DLSS Ray Reconstruction is active."
+msgstr "显示 NVIDIA DLSS 光线重建在降噪后重建出的深度缓冲。仅在 DLSS 光线重建激活时有效。"
+
+msgid ""
+"Enables or disables procedural ray tracing geometry for the given [param instance]. When [param procedural] is [code]true[/code], the instance uses AABB-based intersection for ray tracing instead of triangle geometry. [param aabb] defines the conservative bounding volume used for culling the instance in the Top-Level Acceleration Structure (TLAS). The actual per-primitive AABBs must be provided separately via [method instance_set_rt_procedural_bounds].\n"
+"[b]Note:[/b] Only supported on mesh instances. The mesh still drives CPU-side culling; only the ray tracing path is affected."
+msgstr ""
+"为给定的 [param instance] 启用或禁用程序化光线追踪几何体。当 [param procedural] 为 [code]true[/code] 时，该实例在光线追踪中使用基于 AABB 的相交测试而不是三角形几何体。[param aabb] 定义了在顶层加速结构（TLAS）中用于剔除该实例的保守包围体。实际的逐图元 AABB 必须另行通过 [method instance_set_rt_procedural_bounds] 提供。\n"
+"[b]注意：[/b]仅支持网格实例。网格仍然驱动 CPU 端的剔除；只有光线追踪路径受到影响。"
+
+msgid ""
+"Sets the per-primitive axis-aligned bounding boxes used by the ray tracer for a procedural instance. [param aabb_data] is a flat array of [code skip-lint]float[/code] values, with each AABB occupying 6 consecutive values ([code]min_x, min_y, min_z, max_x, max_y, max_z[/code]). Each AABB corresponds to one procedural primitive visible to intersection shaders via [code]gl_PrimitiveID[/code].\n"
+"If [param expose_bounds] is [code]true[/code], the AABBs are also accessible from ray hit shaders, which allows intersection shaders to skip the ray-AABB test and use precomputed results.\n"
+"[b]Note:[/b] [method instance_set_rt_procedural] must be called with [code]procedural = true[/code] before this method has any effect."
+msgstr ""
+"设置光线追踪器用于程序化实例的逐图元轴对齐包围盒。[param aabb_data] 是一个由 [code skip-lint]float[/code] 值组成的扁平数组，每个 AABB 占用 6 个连续的值（[code]min_x, min_y, min_z, max_x, max_y, max_z[/code]）。每个 AABB 对应一个程序化图元，相交着色器可通过 [code]gl_PrimitiveID[/code] 访问。如果 [param expose_bounds] 为 [code]true[/code]，这些 AABB 还可以在光线命中着色器中访问，使相交着色器能够跳过光线与 AABB 的相交测试并直接使用预计算结果。\n"
+"[b]注意：[/b]必须先以 [code]procedural = true[/code] 调用 [method instance_set_rt_procedural]，本方法才会生效。"
+
+msgid "Toggles Frame Generation technology on a viewport. (Currently supports DLSS 3.0 - NVIDIA only)"
+msgstr "切换视口上的帧生成技术。（目前支持 DLSS 3.0，仅限 NVIDIA）"
+
+msgid "Use NVIDIA DLSS upscaling for the viewport's 3D buffer. The amount of scaling can be set using [member Viewport.scaling_3d_scale]. Values less than [code]1.0[/code] will result in the viewport being upscaled using DLSS Super Resolution or DLSS Ray Regeneration, depending on raytracing mode. Values greater than [code]1.0[/code] are not supported and bilinear downsampling will be used instead. A value of [code]1.0[/code] will use DLSS at native resolution as a TAA solution (DLAA)."
+msgstr "对视口的 3D 缓冲使用 NVIDIA DLSS 放大。缩放比例可以通过 [member Viewport.scaling_3d_scale] 设置。小于 [code]1.0[/code] 的值会使用 DLSS 超分辨率或 DLSS 光线重建（取决于光线追踪模式）对视口进行放大。不支持大于 [code]1.0[/code] 的值，此时将改用双线性降采样。值为 [code]1.0[/code] 时会以原生分辨率使用 DLSS 作为 TAA 方案（DLAA）。"
+
+msgid "Number of BLAS refits (updates) performed this frame (ray tracing only)."
+msgstr "本帧执行的 BLAS 重构（更新）次数（仅光线追踪）。"
+
+msgid "No denoising is applied to the path-traced image. Noise will be visible unless [member Environment.pathtracing_samples_per_pixel] is set very high."
+msgstr "不对路径追踪图像进行任何降噪。除非 [member Environment.pathtracing_samples_per_pixel] 设置得非常高，否则噪点会很明显。"
+
+msgid "Uses NVIDIA DLSS Ray Reconstruction to denoise the path-traced image. DLSS Ray Reconstruction is a neural temporal denoiser that accumulates information across frames to produce a clean, high-quality result at low sample counts. Requires an NVIDIA RTX GPU and the Streamline plugin to be active."
+msgstr "使用 NVIDIA DLSS 光线重建对路径追踪图像进行降噪。DLSS 光线重建是一种神经网络时域降噪器，通过跨帧累积信息，在低采样数下也能得到干净、高质量的结果。需要 NVIDIA RTX GPU 并且 Streamline 插件处于激活状态。"
+
+msgid "Streamline interface."
+msgstr "Streamline 接口。"
+
+msgid "Global streamline interface, facilitates advanced graphics features."
+msgstr "全局 Streamline 接口，用于启用高级图形特性。"
+
+msgid "Enumerate various capabilities related to Streamline. See [enum StreamlineCapabilityType] for types."
+msgstr "枚举 Streamline 相关的各项能力。类型见 [enum StreamlineCapabilityType]。"
+
+msgid "Set various parameters related to Streamline. See [enum StreamlineParameterType] for types."
+msgstr "设置 Streamline 相关的各项参数。类型见 [enum StreamlineParameterType]。"
+
+msgid "Enable/Disable reflex. Set parameter to 0.0 to disable, 1.0 to enable, 2.0 to enable with low latency boost."
+msgstr "启用/禁用 Reflex。参数设为 0.0 禁用，1.0 启用，2.0 启用并开启低延迟增强。"
+
+msgid "Do frame limiting using Streamline Reflex, improving latency. Example: Set to 16666.7 for 60 FPS. (1000000/60 = 16666.7 us = 16.67 ms)"
+msgstr "使用 Streamline Reflex 进行帧率限制，以改善延迟。例如：设为 16666.7 对应 60 FPS。（1000000/60 = 16666.7 µs = 16.67 ms）"
+
+msgid ""
+"The default DLSS preset to use.\n"
+"Valid values: ?,F,G,H,I,J,K,L,M,N,O"
+msgstr "默认使用的 DLSS 预设。有效值：?,F,G,H,I,J,K,L,M,N,O"
+
+msgid ""
+"The default DLSS Ray Reconstruction preset to use.\n"
+"Valid values: ?,D,E,F,G,H,I,J,K,L,M,N,O"
+msgstr "默认使用的 DLSS 光线重建预设。有效值：?,D,E,F,G,H,I,J,K,L,M,N,O"
+
+msgid "Whether Streamline reports that NVIDIA DLSS upscaling is supported."
+msgstr "Streamline 是否报告支持 NVIDIA DLSS 放大。"
+
+msgid "Whether Streamline reports that NVIDIA DLSS Frame Generation is supported."
+msgstr "Streamline 是否报告支持 NVIDIA DLSS 帧生成。"
+
+msgid "Whether Streamline reports that NVIDIA DLSS Ray Reconstruction is supported."
+msgstr "Streamline 是否报告支持 NVIDIA DLSS 光线重建。"
+
+msgid "Whether Streamline reports that NVIDIA Image Scaling is supported."
+msgstr "Streamline 是否报告支持 NVIDIA Image Scaling（NIS）。"
+
+msgid "Whether Streamline reports that NVIDIA Reflex is supported."
+msgstr "Streamline 是否报告支持 NVIDIA Reflex。"
+
+msgid "Whether Streamline reports that PCL metrics are supported."
+msgstr "Streamline 是否报告支持 PCL 指标。"
+
+msgid "A scene node that represents procedural ray tracing geometry using axis-aligned bounding boxes (AABBs)."
+msgstr "以轴对齐包围盒（AABB）表示程序化光线追踪几何体的场景节点。"
+
+msgid ""
+"[RTProceduralInstance3D] adds a set of axis-aligned bounding boxes (AABBs) to the Top-Level Acceleration Structure (TLAS) as procedural geometry. Unlike mesh-based instances, procedural instances do not have triangle geometry; instead, intersection is handled entirely by a custom intersection shader in the ray tracing pipeline.\n"
+"Each entry in [member bounds] defines one primitive AABB visible to intersection shaders via [code]gl_PrimitiveID[/code]. If [member bounds] is empty the node falls back to a single primitive using [member size] as the bounding box centered at the origin.\n"
+"A zero-surface [ArrayMesh] is attached internally so the renderer classifies this node as a mesh instance. No vertex or index data is submitted to the raster pipeline; the node is invisible outside of ray tracing.\n"
+"[b]Note:[/b] Requires a GPU with hardware ray tracing support and path tracing enabled in the [Environment]."
+msgstr ""
+"[RTProceduralInstance3D] 将一组轴对齐包围盒（AABB）作为程序化几何体添加到顶层加速结构（TLAS）中。与基于网格的实例不同，程序化实例没有三角形几何体；相交测试完全由光线追踪管线中的自定义相交着色器处理。[member bounds] 中的每个条目定义一个图元 AABB，相交着色器可通过 [code]gl_PrimitiveID[/code] 访问。如果 [member bounds] 为空，该节点会退回为单个图元，使用以原点为中心、尺寸为 [member size] 的包围盒。节点内部会附加一个零表面的 [ArrayMesh]，以便渲染器将其归类为网格实例。不会向光栅化管线提交任何顶点或索引数据；在光线追踪之外该节点不可见。\n"
+"[b]注意：[/b]需要支持硬件光线追踪的 GPU，并在 [Environment] 中启用路径追踪。"
+
+msgid "Returns [code]true[/code] if [member bounds] contains at least one entry, meaning the node uses per-primitive AABBs rather than the single [member size]-derived bounding box."
+msgstr "如果 [member bounds] 至少包含一个条目，则返回 [code]true[/code]，表示该节点使用逐图元 AABB 而不是由 [member size] 派生的单个包围盒。"
+
+msgid "Array of per-primitive axis-aligned bounding boxes submitted to the ray tracer. Each entry corresponds to one procedural primitive accessible via [code]gl_PrimitiveID[/code] in the intersection shader. When this array is empty, a single primitive is created using [member size]."
+msgstr "提交给光线追踪器的逐图元轴对齐包围盒数组。每个条目对应一个程序化图元，相交着色器可通过 [code]gl_PrimitiveID[/code] 访问。该数组为空时，会使用 [member size] 创建单个图元。"
+
+msgid "Optional override for the conservative bounding volume used to cull this instance in the TLAS. When set to a non-empty AABB (i.e., [method AABB.has_volume] returns [code]true[/code]), this value is used instead of the union of all [member bounds] entries. Useful when the logical extents of your procedural geometry exceed the individual AABBs."
+msgstr "可选项，覆盖在 TLAS 中用于剔除该实例的保守包围体。当设置为非空的 AABB（即 [method AABB.has_volume] 返回 [code]true[/code]）时，将使用该值代替所有 [member bounds] 条目的并集。当程序化几何体的逻辑范围超出各个 AABB 时很有用。"
+
+msgid "If [code]true[/code], the per-primitive AABBs from [member bounds] are made accessible to hit shaders, allowing intersection shaders to skip redundant ray-AABB tests using precomputed results."
+msgstr "如果为 [code]true[/code]，[member bounds] 中的逐图元 AABB 可供命中着色器访问，使相交着色器能够利用预计算结果跳过多余的光线与 AABB 相交测试。"
+
+msgid "The size of the single fallback bounding box used when [member bounds] is empty. The box is centered at the node origin. Has no effect when [member bounds] contains at least one entry."
+msgstr "[member bounds] 为空时使用的单个回退包围盒的尺寸。包围盒以节点原点为中心。当 [member bounds] 至少包含一个条目时无效。"
