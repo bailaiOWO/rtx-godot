@@ -939,7 +939,6 @@ Error RenderingDeviceDriverVulkan::_check_device_capabilities() {
 		VkPhysicalDeviceRayQueryFeaturesKHR ray_query_features = {};
 		VkPhysicalDeviceSynchronization2FeaturesKHR sync_2_features = {};
 		VkPhysicalDeviceRayTracingValidationFeaturesNV raytracing_validation_features = {};
-		VkPhysicalDeviceRayQueryFeaturesKHR ray_query_features = {};
 
 		const bool use_1_2_features = physical_device_properties.apiVersion >= VK_API_VERSION_1_2;
 		if (use_1_2_features) {
@@ -1040,12 +1039,6 @@ Error RenderingDeviceDriverVulkan::_check_device_capabilities() {
 			sync_2_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES;
 			sync_2_features.pNext = next_features;
 			next_features = &sync_2_features;
-		}
-
-		if (enabled_device_extension_names.has(VK_KHR_RAY_QUERY_EXTENSION_NAME)) {
-			ray_query_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
-			ray_query_features.pNext = next_features;
-			next_features = &ray_query_features;
 		}
 
 		VkPhysicalDeviceFeatures2 device_features_2 = {};
@@ -1514,14 +1507,6 @@ Error RenderingDeviceDriverVulkan::_initialize_device(const LocalVector<VkDevice
 		raytracing_validation_features.pNext = create_info_next;
 		raytracing_validation_features.rayTracingValidation = raytracing_capabilities.validation;
 		create_info_next = &raytracing_validation_features;
-	}
-
-	VkPhysicalDeviceRayQueryFeaturesKHR ray_query_features = {};
-	if (ray_query_support) {
-		ray_query_features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
-		ray_query_features.pNext = create_info_next;
-		ray_query_features.rayQuery = ray_query_support;
-		create_info_next = &ray_query_features;
 	}
 
 	VkPhysicalDeviceVulkan11Features vulkan_1_1_features = {};
