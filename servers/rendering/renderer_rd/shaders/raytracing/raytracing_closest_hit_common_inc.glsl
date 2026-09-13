@@ -452,6 +452,11 @@ void shade_and_bounce(HitData h, MaterialResult m) {
 	uint total_bounces = get_total_bounces(ps.packed_bounces_flags);
 	uint diffuse_bounces = get_diffuse_bounces(ps.packed_bounces_flags);
 
+	// Standard normal-roughness G-buffer for hint_normal_roughness_texture users (primary ray, sample 0 only).
+	if (total_bounces == 0u && is_sample_zero(ps.packed_bounces_flags)) {
+		write_primary_hit_normal_roughness(N, m.roughness);
+	}
+
 	// Environment fog for this ray segment (before surface contribution).
 	apply_segment_fog(gl_HitTEXT, ps.radiance, ps.throughput);
 

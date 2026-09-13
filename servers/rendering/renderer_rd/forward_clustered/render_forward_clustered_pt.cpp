@@ -179,6 +179,18 @@ void RenderForwardClusteredPT::_render_scene(RenderDataRD *p_render_data, const 
 			raytracing->dlss_rr_free_buffers(rb.ptr());
 		}
 
+		// Path tracing replaces the raster depth prepass that normally produces the normal-roughness
+		// buffer, so fill it from the primary hits whenever a material (hint_normal_roughness_texture),
+		// a compositor effect or the debug view asks for it.
+		const bool write_normal_roughness = !is_reflection_probe && rb->get_can_be_storage() &&
+				(scene_state.used_normal_texture || ce_needs_normal_roughness || get_debug_draw_mode() == RSE::VIEWPORT_DEBUG_DRAW_NORMAL_BUFFER);
+		if (write_normal_roughness) {
+			rb_data->ensure_normal_roughness_texture();
+			raytracing->set_normal_roughness_output(rb_data->get_normal_roughness());
+		} else {
+			raytracing->set_normal_roughness_output(RID());
+		}
+
 		RTViewportState *rt_state = raytracing->build_tlas(p_render_data, rt_flags);
 		if (rt_state) {
 			rt_uniform_set = raytracing->update_uniform_set(rt_state, p_render_data, rt_flags);

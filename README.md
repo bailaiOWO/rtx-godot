@@ -55,7 +55,7 @@
 
 | 属性 | 默认 | 说明 |
 |---|---|---|
-| `pathtracing_enabled` | 关 | 为该环境启用硬件加速路径追踪。与光栅化特性互斥：开启后 SDFGI、屏幕空间反射等基于光栅化的效果不再生效。 |
+| `pathtracing_enabled` | 关 | 为该环境启用硬件加速路径追踪。与光栅化特性互斥：开启后 SDFGI、屏幕空间反射等基于光栅化的效果不再生效。本分叉会在光追下继续提供 `hint_depth_texture` 与 `hint_normal_roughness_texture`（由主光线命中写入），后处理描边等着色器可正常工作。 |
 | `pathtracing_samples_per_pixel` | 1 | 每像素每帧发射的光线样本数。越高噪点越少，GPU 开销成比例增加。配合 DLSS 光线重建这类时域降噪器时 1 到 2 即可。 |
 | `pathtracing_max_bounces` | 3 | 光线在被终止前允许的最大反弹次数。越高间接光与相互反射越准确，开销越大。0 表示只算直接光照。 |
 | `pathtracing_denoiser` | DLSS 光线重建 | 降噪器。`PT_DENOISER_DLSS_RAY_RECONSTRUCTION` 使用 NVIDIA DLSS 光线重建做高质量时域降噪，需要 NVIDIA RTX GPU；`PT_DENOISER_NONE` 关闭降噪。 |
@@ -131,6 +131,7 @@ GODOT_VERSION_STATUS=dev5 scons platform=windows target=editor arch=x86_64 d3d12
 |---|---|---|
 | 2026-09-13 | 4.8-dev5 (`9552dfb685`) | 首次同步。14 个文件冲突，解法见合并提交 `a158c2fca3` 的说明。 |
 | 2026-09-13 | 4.8-dev5 (`9552dfb685`) | v4.8-dev5-2：修复路径追踪把正交相机渲染成透视锥的问题（光线生成改为按投影矩阵反投影构造主光线），DLSS 常量按相机投影报告正交。 |
+| 2026-09-13 | 4.8-dev5 (`9552dfb685`) | v4.8-dev5-3：路径追踪现在会在主光线命中处写入标准的法线-粗糙度缓冲，`hint_normal_roughness_texture` 的后处理着色器（描边、风格化）和需要法线的 Compositor Effect 在光追下恢复可用。 |
 
 ## 致谢与许可
 

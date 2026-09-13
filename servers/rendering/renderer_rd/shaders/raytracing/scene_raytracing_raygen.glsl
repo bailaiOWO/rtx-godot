@@ -196,6 +196,9 @@ void main() {
 			ivec2 pixel = ivec2(gl_LaunchIDEXT.xy);
 
 			imageStore(rt_depth_image, pixel, vec4(0.0));
+			if (get_rt_param(RT_PARAM_WRITE_NORMAL_ROUGHNESS) > 0.5) {
+				imageStore(rt_normal_roughness_image, pixel, vec4(0.0)); // Same clear value as the raster prepass.
+			}
 
 			// Sky velocity: reproject a far-plane point using unjittered VPs.
 			{

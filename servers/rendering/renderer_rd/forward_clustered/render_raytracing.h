@@ -454,6 +454,11 @@ class RenderRaytracing {
 	void finalize_buffers(RTViewportState *p_state);
 	void prepare_frame();
 
+	// Standard normal-roughness buffer to fill on primary hits (RID() = disabled); see set_normal_roughness_output().
+	RID normal_roughness_output;
+	RID default_normal_roughness_image; // 1x1 dummy bound when no output is requested.
+	RID _get_default_normal_roughness_image();
+
 public:
 	void initialize(RenderForwardClustered *p_owner);
 
@@ -483,6 +488,10 @@ public:
 	RID dlss_rr_get_specular_hit_dist(RenderSceneBuffersRD *p_render_buffers) const;
 
 	void register_raytracing_buffer_dependencies(RD::RaytracingListID p_list);
+
+	// Texture the primary hits write the standard normal-roughness data into (RGBA8, storage
+	// usage). Pass RID() to disable. Must be set before update_uniform_set() for the frame.
+	void set_normal_roughness_output(RID p_texture) { normal_roughness_output = p_texture; }
 
 	SceneShaderRaytracing *get_shader() const { return shader; }
 

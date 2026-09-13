@@ -98,7 +98,8 @@ public:
 	static constexpr int RT_PARAM_SAMPLE_COUNT = 1;
 	static constexpr int RT_PARAM_MAX_BOUNCES = 2;
 	static constexpr int RT_PARAM_DENOISER = 3;
-	// Indices 4-13 reserved for future use.
+	static constexpr int RT_PARAM_WRITE_NORMAL_ROUGHNESS = 4; // 1.0 when primary hits must fill the standard normal-roughness buffer.
+	// Indices 5-13 reserved for future use.
 	static constexpr int RT_PARAM_LIGHT_COUNT = 14;
 	static constexpr int RT_PARAM_FRAME_INDEX = 15;
 

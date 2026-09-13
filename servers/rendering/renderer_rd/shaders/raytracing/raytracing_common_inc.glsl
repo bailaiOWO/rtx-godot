@@ -60,6 +60,22 @@ layout(set = 0, binding = 12, r16f) uniform image2D dlss_rr_specular_hit_dist;
 // the first free slot past them so we do not collide with either.
 layout(set = 0, binding = 28, rg16f) uniform image2D rt_velocity_image;
 layout(set = 0, binding = 15, r32f) uniform image2D rt_depth_image;
+// Standard normal-roughness G-buffer (the texture the raster depth prepass normally renders into).
+// Bound to a 1x1 dummy unless RT_PARAM_WRITE_NORMAL_ROUGHNESS is set.
+layout(set = 0, binding = 29, rgba8) uniform image2D rt_normal_roughness_image;
+
+/// Writes the primary hit into the standard normal-roughness buffer using the raster prepass
+/// encoding (view-space normal * 0.5 + 0.5, roughness scaled into the static-object range) so
+/// spatial shaders sampling hint_normal_roughness_texture and compositor effects keep working
+/// when path tracing replaces the raster prepass.
+void write_primary_hit_normal_roughness(vec3 world_normal, float roughness) {
+	if (get_rt_param(RT_PARAM_WRITE_NORMAL_ROUGHNESS) < 0.5) {
+		return;
+	}
+	mat3 view_basis = mat3(transpose(mat4(scene_data_block.data.view_matrix[0], scene_data_block.data.view_matrix[1], scene_data_block.data.view_matrix[2], vec4(0.0, 0.0, 0.0, 1.0))));
+	vec3 view_normal = normalize(view_basis * world_normal);
+	imageStore(rt_normal_roughness_image, ivec2(gl_LaunchIDEXT.xy), vec4(view_normal * 0.5 + 0.5, clamp(roughness, 0.0, 1.0) * (127.0 / 255.0)));
+}
 
 #endif // !RT_STAGE_ANY_HIT
 

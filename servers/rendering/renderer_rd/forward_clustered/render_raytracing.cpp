@@ -74,6 +74,10 @@ RenderRaytracing::~RenderRaytracing() {
 		RD::get_singleton()->free_rid(mat_ubo_pool_buffer);
 		mat_ubo_pool_buffer = RID();
 	}
+	if (default_normal_roughness_image.is_valid()) {
+		RD::get_singleton()->free_rid(default_normal_roughness_image);
+		default_normal_roughness_image = RID();
+	}
 
 	if (bindless_block) {
 		memdelete(bindless_block);
@@ -172,6 +176,18 @@ void RenderRaytracing::rt_ensure_textures(RenderSceneBuffersRD *p_render_buffers
 	if (!p_render_buffers->has_texture(RB_SCOPE_FORWARD_CLUSTERED, RB_TEX_RT_DEPTH)) {
 		p_render_buffers->create_texture(RB_SCOPE_FORWARD_CLUSTERED, RB_TEX_RT_DEPTH, RD::DATA_FORMAT_R32_SFLOAT, usage_bits, RD::TEXTURE_SAMPLES_1);
 	}
+}
+
+RID RenderRaytracing::_get_default_normal_roughness_image() {
+	if (!default_normal_roughness_image.is_valid()) {
+		RD::TextureFormat tf;
+		tf.format = RD::DATA_FORMAT_R8G8B8A8_UNORM;
+		tf.width = 1;
+		tf.height = 1;
+		tf.usage_bits = RD::TEXTURE_USAGE_STORAGE_BIT | RD::TEXTURE_USAGE_SAMPLING_BIT;
+		default_normal_roughness_image = RD::get_singleton()->texture_create(tf, RD::TextureView());
+	}
+	return default_normal_roughness_image;
 }
 
 bool RenderRaytracing::rt_has_texture(RenderSceneBuffersRD *p_render_buffers) const {
@@ -3074,6 +3090,7 @@ RID RenderRaytracing::update_uniform_set(RTViewportState *p_state, const RenderD
 		// [0] = VIS_MODE, [1] = SAMPLE_COUNT, [2] = MAX_BOUNCES,
 		// [3] = DLSS_RR_ENABLED, [14] = LIGHT_COUNT, [15] = FRAME_INDEX
 		rt_ubo.params[SceneShaderRaytracing::RT_PARAM_FRAME_INDEX] = float(p_state->frame_counter++);
+		rt_ubo.params[SceneShaderRaytracing::RT_PARAM_WRITE_NORMAL_ROUGHNESS] = normal_roughness_output.is_valid() ? 1.0f : 0.0f;
 
 		// Unjittered VP for motion vectors (matches raster convention).
 		{
@@ -3243,6 +3260,16 @@ RID RenderRaytracing::update_uniform_set(RTViewportState *p_state, const RenderD
 		u.binding = 28;
 		u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
 		u.append_id(rb->get_velocity_buffer(false));
+		uniforms.push_back(u);
+	}
+
+	// Binding 29: standard normal-roughness buffer (RGBA8 storage image), filled on primary hits
+	// when a material or compositor effect needs it; a 1x1 dummy keeps the set valid otherwise.
+	{
+		RD::Uniform u;
+		u.binding = 29;
+		u.uniform_type = RD::UNIFORM_TYPE_IMAGE;
+		u.append_id(normal_roughness_output.is_valid() ? normal_roughness_output : _get_default_normal_roughness_image());
 		uniforms.push_back(u);
 	}
 
