@@ -441,7 +441,7 @@ void DLSSEffect::_upscale_internal(RDD::CommandBufferID cmdid, const DLSSContext
 		context->constants.motionVectorsJittered = sl::Boolean::eFalse;
 		context->constants.jitterOffset = sl::float2(p_params.jitter.x, p_params.jitter.y);
 		context->constants.mvecScale = sl::float2(1.0f, 1.0f);
-		context->constants.orthographicProjection = sl::Boolean::eFalse;
+		context->constants.orthographicProjection = p_params.cam_projection.is_orthogonal() ? sl::Boolean::eTrue : sl::Boolean::eFalse;
 		context->constants.reset = p_params.reset_accumulation ? sl::Boolean::eTrue : sl::Boolean::eFalse;
 		sl::Result result = StreamlineContext::get().slSetConstants(context->constants, *StreamlineContext::get().last_token, context->viewport);
 		if (result != sl::Result::eOk) {

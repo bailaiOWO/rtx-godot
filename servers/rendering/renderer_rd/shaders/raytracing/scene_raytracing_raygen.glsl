@@ -37,9 +37,20 @@ void main() {
 			scene_data_block.data.inv_view_matrix[2],
 			vec4(0.0, 0.0, 0.0, 1.0)));
 
-	vec4 target = scene_data_block.data.inv_projection_matrix * vec4(d.x, d.y, 1.0, 1.0);
-	vec4 origin = inv_view * vec4(0.0, 0.0, 0.0, 1.0);
-	vec4 direction = inv_view * vec4(normalize(target.xyz), 0);
+	// Build the primary ray from two unprojected points along this pixel's camera axis instead of
+	// assuming a pinhole camera at the origin. This is correct for perspective, off-center (frustum)
+	// and orthogonal projections alike, and does not depend on the depth range convention.
+	// The two depths are picked in view space (near plane and 4x the near distance) so the
+	// unprojection stays finite even with an infinite far plane.
+	float z_near = scene_data_block.data.z_near;
+	vec4 clip_a = scene_data_block.data.projection_matrix * vec4(0.0, 0.0, -z_near, 1.0);
+	vec4 clip_b = scene_data_block.data.projection_matrix * vec4(0.0, 0.0, -z_near * 4.0, 1.0);
+	vec4 view_a = scene_data_block.data.inv_projection_matrix * vec4(d.x, d.y, clip_a.z / clip_a.w, 1.0);
+	vec4 view_b = scene_data_block.data.inv_projection_matrix * vec4(d.x, d.y, clip_b.z / clip_b.w, 1.0);
+	view_a.xyz /= view_a.w;
+	view_b.xyz /= view_b.w;
+	vec4 origin = inv_view * vec4(view_a.xyz, 1.0);
+	vec4 direction = inv_view * vec4(normalize(view_b.xyz - view_a.xyz), 0.0);
 
 	// Sample count from specialization constant, frame index from uniform
 	const uint samples_per_pixel = RT_GET_SAMPLE_COUNT();
