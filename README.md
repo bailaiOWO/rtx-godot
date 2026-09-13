@@ -28,6 +28,7 @@
 - **硬件路径追踪**：Forward+ 渲染器的光追变体（`RenderForwardClusteredPT`），物理正确的全局光照、反射与阴影；支持蒙皮/形变网格、MultiMesh 合并 BLAS、NVIDIA Shader Execution Reordering。
 - **DLSS**：超分辨率（Super Resolution）、光线重建（Ray Reconstruction，作为路径追踪降噪器）、帧生成（Frame Generation）；Reflex 低延迟与帧率限制；NIS。
 - **RTProceduralInstance3D** 节点：以 AABB 向 TLAS 提交程序化几何，由自定义相交着色器处理。
+- **编辑器简体中文**：上述新增设置项的显示名与类参考说明已翻译（`zh_Hans`），编辑器语言设为简体中文时可直接查看。
 - **调试与工具**：路径追踪调试可视化通道、DLSS RR 输入缓冲调试绘制、光追统计（TLAS/BLAS 计数）、`--gpu-markers`（RenderDoc / Nsight / PIX 事件标记）、`--raytracing-validation`、可选的 Nsight Aftermath GPU 崩溃转储。
 
 ## 下载
@@ -153,6 +154,8 @@ This is a community-maintained repository, not affiliated with NVIDIA or the God
 | Streamline SDK | 2.10.0 (DLSS Super Resolution / Ray Reconstruction / Frame Generation, Reflex, NIS) |
 | Platform | Windows x64, Vulkan and Direct3D 12. Streamline features are Windows-only |
 | Integration branch | `rtx-main` |
+
+**Simplified Chinese:** display names and class-reference descriptions of the new settings are translated (`zh_Hans`).
 
 **Features (from NVIDIA's fork):** hardware path tracing as a variant of the Forward+ renderer (physically based GI, reflections and shadows, skinned and deformed meshes, merged MultiMesh BLAS, Shader Execution Reordering), DLSS Super Resolution, DLSS Ray Reconstruction as the path-tracing denoiser, DLSS Frame Generation, Reflex, NIS, the `RTProceduralInstance3D` node for AABB-based procedural geometry, path-tracing debug views, ray-tracing statistics, `--gpu-markers`, `--raytracing-validation`, and optional Nsight Aftermath crash dumps.
 
